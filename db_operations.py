@@ -1,10 +1,14 @@
 import sqlite3
 import scrape_weather
-
+import matplotlib.pyplot as plt
 
 class DBOperations():
 
     def __init__(self):
+        self.month_dict = {}
+        self.month = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"]
+        self.temp_array = []
         try:
             self.conn = sqlite3.connect("temps.sqlite")
             self.cur = self.conn.cursor()
@@ -29,6 +33,18 @@ class DBOperations():
         except Exception as e:
             print("Error adding data", e)
 
+    def retrieve_data(self):
+        for month in self.month:
+            month_q = "%" + month + "%"
+            for row in self.cur.execute("SELECT * FROM samples WHERE sample_date LIKE ?", (month_q,)):
+                print("its getting here")
+                self.temp_array.append(row[5])
+            self.month_dict[month] =  self.temp_array
+            self.temp_array = []
+        self.cur.close()
+        self.conn.close()
+        return self.month_dict
+
     def print_data(self):
         try:
             for row in self.cur.execute("select * from samples"):
@@ -40,7 +56,10 @@ class DBOperations():
 
 
 if __name__ == "__main__":
-    dict = scrape_weather.link()
+    # dict = scrape_weather.link()
+    # db = DBOperations()
+    # db.add_data(dict)
+    # db.print_data()
     db = DBOperations()
     db.add_data(dict)
-    db.print_data()
+    print(db.retrieve_data())
