@@ -21,10 +21,10 @@ class PlotOperations():
 
 if __name__ == "__main__":
     db = db_operations.DBOperations()
-    dict = scrape_weather.link()
-    db.add_data(dict)
+    # dict = scrape_weather.link()
+    # db.add_data(dict)
     p = PlotOperations()
     p.month_dict = db.retrieve_data()
-    print(p.month_dict)
+    # print(p.month_dict)
     p.graph()
     plt.show()

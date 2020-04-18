@@ -12,21 +12,26 @@ class WeatherProcessor():
     def main(self):
         download = input("Would you like to download the data? y/n: ")
         if download == "y":
-            download()
-        startyear = input("Enter a start year")
-        endyear = input("Enter a end year")
+            # download()
+            pdb = scrape_weather.WeatherScraper()
+            pdb.print()
+            print("Data has been downloaded.")
+        startyear = input("Enter a start year: ")
+        endyear = input("Enter a end year: ")
         db = db_operations.DBOperations()
-        dict = scrape_weather.link()
-        db.add_data(dict)
+        # dict = scrape_weather.link()
+        # db.add_data(dict)
         p = plot_operations.PlotOperations()
         p.month_dict = db.retrieve_data()
         p.graph()
         plt.show()
     
-    def download(self, json):
+    def download(self):
+        print("test")
         pdb = scrape_weather.WeatherScraper()
         pdb.print()
         print("Data has been downloaded.")
+        pass
 
 if __name__ == "__main__":
     wp = WeatherProcessor()

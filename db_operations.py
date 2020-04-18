@@ -13,8 +13,8 @@ class DBOperations():
         try:
             self.conn = sqlite3.connect("temps.sqlite")
             self.cur = self.conn.cursor()
-            sqlDrop = "DROP TABLE Samples"
-            self.cur.execute(sqlDrop)
+            # sqlDrop = "DROP TABLE Samples"
+            # self.cur.execute(sqlDrop)
             self.cur.execute("""create table samples (id integer primary key autoincrement not null, sample_date text not null, location text not null,
                         min_temp real not null,
                         max_temp real not null,
@@ -62,5 +62,5 @@ if __name__ == "__main__":
     # db.print_data()
     db = DBOperations()
     # dict = scrape_weather.link()
-    db.add_data(dict)
+    # db.add_data(dict)
     print(db.retrieve_data())
