@@ -1,5 +1,6 @@
 import sqlite3
 import scrape_weather
+import datetime
 import matplotlib.pyplot as plt
 
 class DBOperations():
@@ -33,11 +34,10 @@ class DBOperations():
         except Exception as e:
             print("Error adding data", e)
 
-    def retrieve_data(self):
+    def retrieve_data(self, **kwargs):
         for month in self.month:
             month_q = "%" + month + "%"
             for row in self.cur.execute("SELECT * FROM samples WHERE sample_date LIKE ?", (month_q,)):
-                print("its getting here")
                 self.temp_array.append(row[5])
             self.month_dict[month] =  self.temp_array
             self.temp_array = []
@@ -61,5 +61,6 @@ if __name__ == "__main__":
     # db.add_data(dict)
     # db.print_data()
     db = DBOperations()
+    dict = scrape_weather.link()
     db.add_data(dict)
     print(db.retrieve_data())
