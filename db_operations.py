@@ -61,6 +61,6 @@ if __name__ == "__main__":
     # db.add_data(dict)
     # db.print_data()
     db = DBOperations()
-    dict = scrape_weather.link()
+    # dict = scrape_weather.link()
     db.add_data(dict)
     print(db.retrieve_data())
