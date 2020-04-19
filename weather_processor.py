@@ -21,8 +21,9 @@ class WeatherProcessor():
 
         download = input("Would you like to download the data? y/n: ")
         if download == "y":
-            pdb = scrape_weather.WeatherScraper()
-            pdb.print()
+            # pdb = scrape_weather.WeatherScraper()
+            # pdb.print()
+            db.download_data()
             print("Data has been downloaded.")
 
         startyear = input("Enter a start year: ")

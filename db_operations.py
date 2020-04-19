@@ -2,11 +2,13 @@ import sqlite3
 import scrape_weather
 import datetime
 import logging
+import json
 import matplotlib.pyplot as plt
 
 class DBOperations():
 
     def __init__(self):
+        self.download_dict = {}
         self.month_dict = {}
         self.month = ["January", "February", "March", "April", "May", "June",
                     "July", "August", "September", "October", "November", "December"]
@@ -19,7 +21,7 @@ class DBOperations():
                         max_temp real not null,
                         avg_temp real not null);""")
         except Exception as e:
-                print("Error in table initialization")
+                print("Error in table initialization", e)
 
     def add_data(self, dictionary):
         sql = """insert into samples (sample_date, location, min_temp,
@@ -63,6 +65,14 @@ class DBOperations():
             self.conn.close()
         except Exception as e:
             print("Error printing data", e)
+
+    def download_data(self):
+        try: 
+            with open('weather_data.json', 'w', encoding='utf-8') as f:
+                for row in self.cur.execute("select * from samples"):
+                    json.dump(row, f, ensure_ascii=False, indent=4)
+        except Exception as e:
+            print("Error downloading data", e)
 
 
 if __name__ == "__main__":
