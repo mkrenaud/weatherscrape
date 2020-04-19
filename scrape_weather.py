@@ -1,5 +1,5 @@
 """
-Initial Web Scraping for Final Python Project.
+Module that scrapes the Climate Data for Winnipeg, Manitoba.
 
 Matt Renaud
 """
@@ -8,6 +8,7 @@ from html.parser import HTMLParser
 import urllib.request
 import datetime
 import json
+
 
 class WeatherScraper(HTMLParser):
     """A class that scrapes the weather."""
@@ -30,7 +31,7 @@ class WeatherScraper(HTMLParser):
         self.previous = True
 
     def handle_starttag(self, tag, attrs):
-        """Htmlparser method that will handle the start of tags. Will stop parsing when there is no previous button on the page."""
+        """Htmlparser method that will handle the start of tags."""
         if tag == "tbody":
             self.tbody = True
         if tag == "tr" and self.tbody:
@@ -39,9 +40,11 @@ class WeatherScraper(HTMLParser):
             self.td = True
         if tag == "abbr" and self.tbody:
             for name, value in attrs:
-                if name == "title" and value != "Extreme" and value != "Average":
-                    self.key = value
-                    self.inDay = True
+                if (name == "title" and
+                    value != "Extreme" and
+                        value != "Average"):
+                            self.key = value
+                            self.inDay = True
         if tag == "li":
             for name, value in attrs:
                 if name == "class" and value == "previous disabled":
@@ -78,7 +81,8 @@ class WeatherScraper(HTMLParser):
                     self.mean = data
 
             if(self.inDay):
-                self.temp_dict = {"Max Temp": self.max, "Min Temp": self.min, "Mean Temp": self.mean}
+                self.temp_dict = {"Max Temp": self.max, "Min Temp": self.min,
+                                  "Mean Temp": self.mean}
                 self.weather_dict[self.key] = self.temp_dict
 
     def print(self):
@@ -88,15 +92,20 @@ class WeatherScraper(HTMLParser):
 
 
 def link():
-    """Generate a link that will be used to scrape all weather data."""
+    """Generate a link that will be used to scrape all weather data.
+    The parsing will continue until there is no previous data input."""
     parser = WeatherScraper()
     cur_year = datetime.date.today().year
     cur_month = datetime.date.today().month
     while parser.previous:
         with urllib.request.urlopen('https://climate.weather.gc.ca/'
-                                    'climate_data/daily_data_e.html?StationID=27174&timeframe=2&'
-                                    'StartYear=1840&EndYear=2018&Day=1&Year='
-                                    f'{cur_year}&Month={cur_month}#') as response:
+                                    'climate_data/daily_data_e.html?'
+                                    'StationID=27174'
+                                    '&timeframe=2&'
+                                    'StartYear=1840&EndYear=2018&Day=1'
+                                    '&Year='
+                                    f'{cur_year}'
+                                    f'&Month={cur_month}#') as response:
             html = str(response.read())
             parser.feed(html)
 
@@ -106,7 +115,7 @@ def link():
                 cur_month = 12
                 cur_year -= 1
 
-    parser.print()
+    # parser.print()
     return parser.weather_dict
 
 
