@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 class DBOperations():
 
     def __init__(self):
-        self.download_dict = {}
+        self.select_dict = {}
         self.month_dict = {}
         self.month = ["January", "February", "March", "April", "May", "June",
                     "July", "August", "September", "October", "November", "December"]
@@ -74,7 +74,24 @@ class DBOperations():
         except Exception as e:
             print("Error downloading data", e)
 
+    def select_data(self, startYear, endYear):
+        while(startYear <= endYear):
+            for month in self.month:
+                year_q = "%" + str(startYear) + "%"
+                month_q = "%" + month + "%"
+                for row in self.cur.execute("SELECT * from samples WHERE sample_date LIKE ? AND sample_date LIKE ?", (year_q,month_q,)):
+                    self.temp_array.append(row[5])
+                if month in self.select_dict:
+                    for values in self.temp_array:
+                        self.select_dict[month].append(values)
+                else:
+                    self.select_dict[month] = self.temp_array
+                self.temp_array = []
+            startYear = startYear + 1
+        return self.select_dict
+                
 
 if __name__ == "__main__":
     db = DBOperations()
-    print(db.retrieve_data())
+    #print(db.retrieve_data())
+    print(db.select_data(1996, 2020))
