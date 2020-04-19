@@ -18,11 +18,11 @@ class WeatherProcessor():
             dict = scrape_weather.link()
             db.reset_data()
             db.add_data(dict)
+            print("Data has been updated.")
 
         download = input("Would you like to download the data? y/n: ")
         if download == "y":
-            pdb = scrape_weather.WeatherScraper()
-            pdb.print()
+            db.download_data()
             print("Data has been downloaded.")
 
         startyear = input("Enter a start year: ")
@@ -31,12 +31,6 @@ class WeatherProcessor():
         p.month_dict = db.retrieve_data()
         p.graph()
         plt.show()
-    
-    def download(self):
-        pass
-
-    def update(self):
-        pass
 
 if __name__ == "__main__":
     wp = WeatherProcessor()
